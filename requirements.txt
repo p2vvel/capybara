@@ -10,5 +10,4 @@ pyjwt
 httpx
 pytest
 
-sqlalchemy
-python-multipart
+beanie

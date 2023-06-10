@@ -21,7 +21,7 @@ def root():
 @app.on_event("startup")
 async def startup():
     client = AsyncIOMotorClient(MONGO_URI)
-    
+
     await init_beanie(
         database=client.get_database(MONGO_DB),
         document_models=[User],     # TODO: Update models here

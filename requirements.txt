@@ -6,6 +6,7 @@ fastapi
 uvicorn[standard]
 passlib[bcrypt]
 pyjwt
+python-multipart
 
 httpx
 pytest

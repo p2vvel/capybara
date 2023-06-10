@@ -1,6 +1,10 @@
-from .models import User, UserInput
-from fastapi import HTTPException
+from fastapi import status, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
+from datetime import timedelta, datetime
+from .models import User, UserInput, Token
 from .utils import pwd_context
+from .. import config
+import jwt
 
 
 async def create_user(user: UserInput) -> User:
@@ -44,3 +48,28 @@ async def delete_user(username: str) -> None:
         await user.delete()
     else:
         raise HTTPException(status_code=404, detail="User not found")
+
+
+async def user_login(user: OAuth2PasswordRequestForm) -> User:
+    user_db = await get_user_by_username(user.username)
+
+    if user_db:
+        if pwd_context.verify(user.password, user_db.password):
+            return user_db
+        else:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Wrong password")
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"User '{user.username}' not existing"
+        )
+
+
+def generate_token(user: UserInput, time_delta: timedelta = timedelta(minutes=15)) -> Token:
+    expiration_time = (datetime.utcnow() + time_delta).timestamp()
+    payload = {
+        "sub": user.username,
+        "iss": expiration_time,
+    }
+
+    token = jwt.encode(payload, config.SECRET, algorithm=config.ALGORITHM)
+    return Token(active_token=token, expires=expiration_time)

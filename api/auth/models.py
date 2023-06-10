@@ -17,7 +17,6 @@ class User(Document):
 class UserInput(BaseModel):
     username: str
     password: str
-    is_superuser: bool = False
 
 
 class UserOutput(BaseModel):
@@ -27,3 +26,9 @@ class UserOutput(BaseModel):
     is_active: bool = True
     created_at: datetime = datetime.now()
     updated_at: datetime = datetime.now()
+
+
+class Token(BaseModel):
+    active_token: str
+    token_type: str = "bearer"
+    expires: int

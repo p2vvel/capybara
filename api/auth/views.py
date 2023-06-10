@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from . import crud
 from . import models
-
+from .dependencies import get_user
 
 router = APIRouter()
 
@@ -27,3 +28,18 @@ async def delete_user(username: str) -> None:
 async def update_user(username: str, user: models.UserInput) -> models.UserOutput:
     result = await crud.update_user(username, user)
     return result
+
+
+@router.post("/login")
+async def login(user: OAuth2PasswordRequestForm = Depends()) -> models.Token:
+    user_db = await crud.user_login(user)
+    token = crud.generate_token(user_db)
+    return token
+
+
+@router.get("/hi")
+def hi(user: models.User = Depends(get_user)) -> str:
+    if user:
+        return f"Hello, {user.username}!"
+    else:
+        return "Hello world!"

@@ -1,11 +1,18 @@
 from .models import User, UserInput
 from fastapi import HTTPException
+from .utils import pwd_context
 
 
 async def create_user(user: UserInput) -> User:
-    temp = User(**user.dict())
-    await temp.create()
-    return temp
+    if await User.find(User.username == user.username).first_or_none():
+        raise HTTPException(status_code=409, detail="Username already exists")
+    else:
+        hashed_password = pwd_context.hash(user.password)
+        new_user = user.dict()
+        new_user.update({"password": hashed_password})
+        temp = User(**new_user)
+        await temp.create()
+        return temp
 
 
 async def get_users() -> list[User]:

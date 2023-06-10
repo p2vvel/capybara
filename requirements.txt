@@ -1,0 +1,14 @@
+fastapi
+pydantic
+docker
+
+fastapi
+uvicorn[standard]
+passlib[bcrypt]
+pyjwt
+
+httpx
+pytest
+
+sqlalchemy
+python-multipart

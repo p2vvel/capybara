@@ -7,3 +7,4 @@ MONGO_DB = "code"
 # docker instance used to run development vscode servers
 CODE_DOCKER_URI = "tcp://localhost:4243"
 DEV_SERVER_IMAGE = "linuxserver/code-server"
+DEV_SERVER_RAM = "1g"   # default amount of ram to allocate for dev container

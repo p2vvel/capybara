@@ -7,6 +7,8 @@ from .dependencies import get_user
 router = APIRouter()
 
 
+# TODO: permissions!
+
 @router.post("/")
 async def create_user(user: models.UserInput) -> models.UserOutput:
     result = await crud.create_user(user)

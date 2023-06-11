@@ -4,13 +4,12 @@ from beanie import init_beanie
 from api.config import MONGO_URI, MONGO_DB
 from api.auth.models import User
 from .auth.views import router as auth_router
+from .code.views import router as code_router
 
-# async def init_db():
 
-
-# init_db()
 app = FastAPI()
 app.include_router(auth_router, prefix="/auth")
+app.include_router(code_router, prefix="/code")
 
 
 @app.get("/")

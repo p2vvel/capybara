@@ -35,7 +35,9 @@ async def get_user_by_username(username: str) -> User:
 async def update_user(username: str, user: UserInput) -> User:
     user_db = await User.find(User.username == username).first_or_none()
     if user_db:
-        await user_db.set(user.dict())
+        new_user = user.dict()
+        new_user.update({"password": pwd_context.hash(user.password)})
+        await user_db.set(new_user)
         user_db.update()
         return user_db
     else:

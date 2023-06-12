@@ -8,6 +8,7 @@ class User(Document):
     username: str
     password: str
     is_superuser: bool = False
+    is_pro_user: bool = False
     is_active: bool = True
     is_active: bool = True
     created_at: datetime = datetime.now()
@@ -21,11 +22,12 @@ class UserInput(BaseModel):
 
 class UserOutput(BaseModel):
     username: str
-    is_superuser: bool = False
-    is_active: bool = True
-    is_active: bool = True
-    created_at: datetime = datetime.now()
-    updated_at: datetime = datetime.now()
+    is_superuser: bool
+    is_pro_user: bool
+    is_active: bool
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
 
 
 class Token(BaseModel):

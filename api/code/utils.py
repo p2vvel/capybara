@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 from api.containers import client
-from .models import CodeStatus
+from .models import CodeStatus, ContainerEdit, CodeStateCommandEnum
 from api import config
 from api.auth.models import User
 
@@ -49,7 +49,7 @@ def container_status(container: Container | None) -> CodeStatus:
     if container is None:
         return CodeStatus(name=None, status="Container not created", url=None)
     else:
-        if container.status != "created":
+        if container.status == "running":
             ip = container.ports["8443/tcp"][0]["HostIp"]
             port = container.ports["8443/tcp"][0]["HostPort"]
             url = f"http://{ip}:{port}"
@@ -63,3 +63,14 @@ def delete_container(container: Container) -> None:
         container.remove(force=True)
     except docker_errors.APIError:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Docker API error")
+
+
+def container_edit(container: Container, state: ContainerEdit) -> None:
+    if state.state == CodeStateCommandEnum.START:
+        container.start()
+    elif state.state == CodeStateCommandEnum.STOP:
+        container.stop()
+    elif state.state == CodeStateCommandEnum.RESTART:
+        container.restart()
+    else:
+        return

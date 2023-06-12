@@ -1,12 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from api.auth.dependencies import get_user_or_401
 from api.auth.models import User
-from .utils import start_dev_container, get_container, user_code_name, container_status, delete_container
+from .utils import start_dev_container, get_container, user_code_name, container_status, delete_container, container_edit
+from .models import CodeStatus, ContainerEdit
+
 
 router = APIRouter()
 
 
-@router.post("/")
+@router.post("/", response_model=CodeStatus)
 def create_code_env(user: User = Depends(get_user_or_401)):
     ''' Create new container '''
     
@@ -14,7 +16,7 @@ def create_code_env(user: User = Depends(get_user_or_401)):
     return container_status(code)
 
 
-@router.get("/")
+@router.get("/", response_model=CodeStatus)
 def get_code_env(user: User = Depends(get_user_or_401)):
     ''' Get container status'''
     code = get_container(user_code_name(user))
@@ -32,7 +34,9 @@ def delete_code_env(user: User = Depends(get_user_or_401)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Container not created")
 
 
-@router.put("/")
-def update_code_env(user: User = Depends(get_user_or_401)):
+@router.put("/", response_model=None)
+def update_code_env(state: ContainerEdit, user: User = Depends(get_user_or_401)):
     ''' Update container state, eg. available memory, state (stop, start, etc) '''
-    return {"code": "1234"}
+    code = get_container(user_code_name(user))
+    container_edit(code, state)
+    raise HTTPException(status_code=status.HTTP_200_OK, detail="Container updated")

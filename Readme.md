@@ -1,11 +1,20 @@
-Ideas:
+# Capybara
+###  Be careful, still under construction 🚧👷‍♂️🏗️👷‍♂️👷‍♂️🚧
+<br/>
+
+### Idea
+Simple REST API allowing for easy deployment of development environments based on VSCode images. Registered users will be able to start their own, private dev environment.
 
 
+### Tech stack:
+* FastAPI
+* MongoDB
+* Docker
 
-DEV CONTAINERS:
-user = container, users can create new ones, start them, stop them and delete them
-admin = all of the above + manage all of them
+<br/>
 
+### TODO list:
+* design implement endpoint allowing pro users for deploying their apps 
+* write scripts for app deployment
+* write tests
 
-RUN CONTAINERS:
-let users to run docker compose files, only for pro users and admins
